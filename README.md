@@ -8,6 +8,7 @@ Search for the string "##REPLACE" and you will be able to find all the necessary
 
 ## Detailed tutorial link
 
+*https://medium.com/@rafaeloltra/streaming-salesforce-events-into-aws-kinesis-streams-using-mulesoft-and-the-new-pub-sub-api-f028d6d09dc7*
 
 ### You must (at minimum):
 
