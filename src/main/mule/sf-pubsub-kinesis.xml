@@ -44,7 +44,7 @@ output application/json
 payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<kinesis:put-record doc:name="Put Record" doc:id="5e6a43ff-cef0-4932-82e9-8bf239b2dfc5" config-ref="Amazon_Kinesis_Data_Streams_Connector_Config" streamName="rafa-stream"/>
+		<kinesis:put-record doc:name="Put Record" doc:id="5e6a43ff-cef0-4932-82e9-8bf239b2dfc5" config-ref="Amazon_Kinesis_Data_Streams_Connector_Config" streamName="##REPLACE WITH YOUR KINESIS STREAM##"/>
 		<logger level="INFO" doc:name="log payload" doc:id="13a6e50b-ff0b-4c8f-b1e4-0e6584fefe2c" message="#[payload]"/>
 	</flow>
 </mule>
