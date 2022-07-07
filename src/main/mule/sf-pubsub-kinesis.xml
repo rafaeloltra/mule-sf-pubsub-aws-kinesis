@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:kinesis="http://www.mulesoft.org/schema/mule/kinesis"
+	xmlns:salesforce-pub-sub="http://www.mulesoft.org/schema/mule/salesforce-pub-sub"
+	xmlns:amqp="http://www.mulesoft.org/schema/mule/amqp" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amqp/current/mule-amqp.xsd
+http://www.mulesoft.org/schema/mule/salesforce-pub-sub http://www.mulesoft.org/schema/mule/salesforce-pub-sub/current/mule-salesforce-pub-sub.xsd
+http://www.mulesoft.org/schema/mule/kinesis http://www.mulesoft.org/schema/mule/kinesis/current/mule-kinesis.xsd">
+
+	<salesforce-pub-sub:pubsub-config name="Salesforce_PubSub_Config"
+		doc:name="Salesforce PubSub Config" doc:id="b0458413-66e0-4ecf-9736-ea26be89f961">
+		<salesforce-pub-sub:basic-connection username="##REPLACE SALESFORCE USERNAME##"
+			password="##REPLACE SALESFORCE PASSWORD##" securityToken="##REPLACE SALESFORCE SECURITY TOKEN##" />
+	</salesforce-pub-sub:pubsub-config>
+
+
+	<kinesis:config name="Amazon_Kinesis_Data_Streams_Connector_Config"
+		doc:name="Amazon Kinesis Data Streams Connector Config" doc:id="d4e49718-2ddd-4359-822e-351ff8b284ab">
+		<kinesis:connection accessKey="##REPLACE AWS ACCESS KEY##" secretKey="##REPLACE AWS SECRET KEY##"
+			region="us-east-1" />
+	</kinesis:config>
+	<flow name="sf-cdcFlow"
+		doc:id="fd1885ad-e9a8-4e08-af27-512d45ad3831">
+		<salesforce-pub-sub:subscribe-channel-listener
+			doc:name="Subscribe channel listener"
+			doc:id="f48f3f6a-c5d2-4574-a460-a1677a5a245d"
+			config-ref="Salesforce_PubSub_Config"
+			channelName="/data/ContactChangeEvent">
+			<salesforce-pub-sub:replay-option>
+				<salesforce-pub-sub:latest />
+			</salesforce-pub-sub:replay-option>
+		</salesforce-pub-sub:subscribe-channel-listener>
+		<logger level="INFO" doc:name="log payload" doc:id="a202a586-98d6-4ecf-8c92-8bb4fd5e8530" message="#[payload]" />
+		<ee:transform doc:name="to json" doc:id="b13c71c6-94a7-4603-87e9-9f15310f7f6e">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<kinesis:put-record doc:name="Put Record" doc:id="5e6a43ff-cef0-4932-82e9-8bf239b2dfc5" config-ref="Amazon_Kinesis_Data_Streams_Connector_Config" streamName="rafa-stream"/>
+		<logger level="INFO" doc:name="log payload" doc:id="13a6e50b-ff0b-4c8f-b1e4-0e6584fefe2c" message="#[payload]"/>
+	</flow>
+</mule>
