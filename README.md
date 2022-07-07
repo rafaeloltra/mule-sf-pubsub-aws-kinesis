@@ -1,6 +1,10 @@
 # mule-sf-pubsub-aws-kinesis
 
-Since this is strictly a tutorial, the entire Mule integration is contained within a single XML file, search for "##REPLACE" and you will be able to find all the necessary place holders that need to be changed.
+Since this is strictly a tutorial, the entire Mule integration is contained within a single XML file
+
+Search for the string "##REPLACE" and you will be able to find all the necessary place holders that need to be changed.
+
+### *Make sure to properly secure all credentials, secrets and keys per your organizations and netsec policies*
 
 ## Detailed tutorial link
 
@@ -12,5 +16,4 @@ Since this is strictly a tutorial, the entire Mule integration is contained with
 
 
 
-### *Make sure to properly secure all credentials, secrets and keys per your organizations and netsec policies*
 
